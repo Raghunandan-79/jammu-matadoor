@@ -14,7 +14,7 @@ const rozhaOne = Rozha_One({
 });
 
 export const metadata: Metadata = {
-  title: "Jammu Matador Radio — Local Beats playing live",
+  title: "Jammu Matadoor Radio — Local Beats playing live",
   description: "A live local radio station playing Dogri folk, high-bass Punjabi, and Bollywood remixes that play in the minibuses of Jammu. Real-time passenger count, local IST time, and tracks linked to Spotify and YouTube Music.",
   verification: {
     google: "-EEiCGYrdcHB68qnMP5vC84yOQ7_BCFQGtmlx1sprUw",
