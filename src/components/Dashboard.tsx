@@ -13,7 +13,9 @@ import {
   Clock, 
   Share2, 
   X,
-  Compass
+  Compass,
+  Repeat,
+  Repeat1
 } from "lucide-react";
 import songsData from "../data/songs.json";
 import { getYouTubeId } from "../utils/youtube";
@@ -66,6 +68,8 @@ export default function Dashboard() {
   const [driverState, setDriverState] = useState<string>(DRIVER_STATES[0]);
   const [currentTimeStr, setCurrentTimeStr] = useState<string>("");
   const [currentDateStr, setCurrentDateStr] = useState<string>("");
+  const [isLoopPlaylist, setIsLoopPlaylist] = useState<boolean>(true);
+  const [isRepeatTrack, setIsRepeatTrack] = useState<boolean>(false);
 
   // Modals & Popups
   const [isAllSongsOpen, setIsAllSongsOpen] = useState<boolean>(false);
@@ -252,7 +256,7 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Simulate Jammu Matadoor ecosystem
+  // Simulate Jammu Matadoor ecosystem (Passengers and Driver status)
   useEffect(() => {
     const interval = setInterval(() => {
       setPassengerCount(prev => {
@@ -261,9 +265,6 @@ export default function Dashboard() {
         return Math.max(5, Math.min(55, next));
       });
 
-      if (Math.random() > 0.7) {
-        setActiveRoute(ROUTES[Math.floor(Math.random() * ROUTES.length)]);
-      }
       if (Math.random() > 0.6) {
         setDriverState(DRIVER_STATES[Math.floor(Math.random() * DRIVER_STATES.length)]);
       }
@@ -289,27 +290,42 @@ export default function Dashboard() {
     setIsPlaying(prev => !prev);
   };
 
+  const seekToZeroAndPlay = () => {
+    const iframe = document.getElementById("stereo-youtube-iframe") as HTMLIFrameElement;
+    if (iframe && iframe.contentWindow) {
+      try {
+        iframe.contentWindow.postMessage(
+          JSON.stringify({ event: "command", func: "seekTo", args: [0, true] }),
+          "*"
+        );
+        iframe.contentWindow.postMessage(
+          JSON.stringify({ event: "command", func: "playVideo", args: "" }),
+          "*"
+        );
+      } catch (e) {}
+    }
+    setCurrentTime(0);
+    setIsPlaying(true);
+  };
+
   const handleNext = () => {
     if (filteredSongs.length === 0) return;
-    const nextIndex = (activeSongIndex + 1) % filteredSongs.length;
     
-    if (nextIndex === activeSongIndex) {
-      // Loop the same song by seeking back to 0 and playing
-      const iframe = document.getElementById("stereo-youtube-iframe") as HTMLIFrameElement;
-      if (iframe && iframe.contentWindow) {
-        try {
-          iframe.contentWindow.postMessage(
-            JSON.stringify({ event: "command", func: "seekTo", args: [0, true] }),
-            "*"
-          );
-          iframe.contentWindow.postMessage(
-            JSON.stringify({ event: "command", func: "playVideo", args: "" }),
-            "*"
-          );
-        } catch (e) {}
+    if (isRepeatTrack) {
+      seekToZeroAndPlay();
+      return;
+    }
+
+    const nextIndex = activeSongIndex + 1;
+    if (nextIndex >= filteredSongs.length) {
+      if (isLoopPlaylist) {
+        setActiveSongIndex(0);
+        setCurrentTime(0);
+        setIsPlaying(true);
+        setPlayerError(null);
+      } else {
+        setIsPlaying(false);
       }
-      setCurrentTime(0);
-      setIsPlaying(true);
     } else {
       setActiveSongIndex(nextIndex);
       setCurrentTime(0);
@@ -320,25 +336,22 @@ export default function Dashboard() {
 
   const handlePrev = () => {
     if (filteredSongs.length === 0) return;
-    const prevIndex = (activeSongIndex - 1 + filteredSongs.length) % filteredSongs.length;
-    
-    if (prevIndex === activeSongIndex) {
-      // Loop the same song by seeking back to 0 and playing
-      const iframe = document.getElementById("stereo-youtube-iframe") as HTMLIFrameElement;
-      if (iframe && iframe.contentWindow) {
-        try {
-          iframe.contentWindow.postMessage(
-            JSON.stringify({ event: "command", func: "seekTo", args: [0, true] }),
-            "*"
-          );
-          iframe.contentWindow.postMessage(
-            JSON.stringify({ event: "command", func: "playVideo", args: "" }),
-            "*"
-          );
-        } catch (e) {}
+
+    if (isRepeatTrack) {
+      seekToZeroAndPlay();
+      return;
+    }
+
+    const prevIndex = activeSongIndex - 1;
+    if (prevIndex < 0) {
+      if (isLoopPlaylist) {
+        setActiveSongIndex(filteredSongs.length - 1);
+        setCurrentTime(0);
+        setIsPlaying(true);
+        setPlayerError(null);
+      } else {
+        setIsPlaying(false);
       }
-      setCurrentTime(0);
-      setIsPlaying(true);
     } else {
       setActiveSongIndex(prevIndex);
       setCurrentTime(0);
@@ -438,9 +451,25 @@ export default function Dashboard() {
             </span>
           </div>
 
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/5 text-[11px] text-white/40">
-            <Compass className="w-3.5 h-3.5 text-[#ff3366]" />
-            <span className="font-medium tracking-wide">{activeRoute}</span>
+          <div className="flex flex-col gap-1 mt-2 pt-2 border-t border-white/5">
+            <span className="text-[9px] uppercase font-bold tracking-widest text-[#00ff66]">
+              SELECT ROUTE
+            </span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <Compass className="w-3.5 h-3.5 text-[#ff3366] flex-shrink-0" />
+              <select
+                value={activeRoute}
+                onChange={(e) => setActiveRoute(e.target.value)}
+                className="bg-transparent text-xs font-semibold text-white/80 border-0 focus:ring-0 focus:outline-none cursor-pointer hover:text-[#00ff66] transition-colors p-0 m-0"
+                style={{ WebkitAppearance: "none", appearance: "none" }}
+              >
+                {ROUTES.map((route) => (
+                  <option key={route} value={route} className="bg-[#121217] text-white">
+                    {route}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -590,10 +619,23 @@ export default function Dashboard() {
             <div className="flex items-center justify-between sm:justify-end gap-5">
               
               {/* Audio Controls */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
+                <button 
+                  onClick={() => setIsLoopPlaylist(prev => !prev)}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                    isLoopPlaylist 
+                      ? "text-[#00ff66] hover:text-white" 
+                      : "text-white/20 hover:text-white"
+                  }`}
+                  title={isLoopPlaylist ? "Loop Playlist: ON" : "Loop Playlist: OFF"}
+                >
+                  <Repeat className="w-4 h-4" />
+                </button>
+
                 <button 
                   onClick={handlePrev}
-                  className="p-2 text-white/60 hover:text-white transition-colors cursor-pointer transform active:scale-95"
+                  className="p-1.5 text-white/60 hover:text-[#00ff66] transition-colors cursor-pointer transform active:scale-95"
+                  title="Previous Track"
                 >
                   <SkipBack className="w-4.5 h-4.5" />
                 </button>
@@ -601,6 +643,7 @@ export default function Dashboard() {
                 <button 
                   onClick={handlePlayPause}
                   className="w-10 h-10 rounded-full bg-white text-black hover:bg-[#00ff66] hover:text-black flex items-center justify-center transition-all cursor-pointer transform active:scale-95 shadow-[0_0_12px_rgba(255,255,255,0.2)]"
+                  title="Play/Pause"
                 >
                   {isPlaying ? (
                     <Pause className="w-4 h-4 fill-current" />
@@ -611,9 +654,22 @@ export default function Dashboard() {
 
                 <button 
                   onClick={handleNext}
-                  className="p-2 text-white/60 hover:text-white transition-colors cursor-pointer transform active:scale-95"
+                  className="p-1.5 text-white/60 hover:text-[#00ff66] transition-colors cursor-pointer transform active:scale-95"
+                  title="Next Track"
                 >
                   <SkipForward className="w-4.5 h-4.5" />
+                </button>
+
+                <button 
+                  onClick={() => setIsRepeatTrack(prev => !prev)}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                    isRepeatTrack 
+                      ? "text-[#00ff66] hover:text-white" 
+                      : "text-white/20 hover:text-white"
+                  }`}
+                  title={isRepeatTrack ? "Repeat Track: ON" : "Repeat Track: OFF"}
+                >
+                  <Repeat1 className="w-4 h-4" />
                 </button>
               </div>
 
