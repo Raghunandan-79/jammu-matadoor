@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
+/* Base variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-sans: var(--font-outfit), Arial, sans-serif;
+  --font-rozha: var(--font-rozha-one), serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Custom CSS styling for premium look */
+body {
+  font-family: var(--font-sans);
+  background-color: #050508;
+  color: #ffffff;
+  overflow-x: hidden;
+  height: 100vh;
+  margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Glassmorphism panel styling */
+.glass-panel {
+  background: rgba(15, 15, 25, 0.45);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(15, 15, 25, 0.55);
+}
+
+/* Utility to hide scrollbars */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom thin scrollbar for lists */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 102, 0.4);
+}
+
+/* Custom visualizer bounce animation */
+@keyframes bounce {
+  0% {
+    height: 15%;
+    background-color: #00ff66;
+    box-shadow: 0 0 5px rgba(0, 255, 102, 0.2);
+  }
+  50% {
+    background-color: #ff3366;
+    box-shadow: 0 0 10px rgba(255, 51, 102, 0.4);
+  }
+  100% {
+    height: 100%;
+    background-color: #00ff66;
+    box-shadow: 0 0 15px rgba(0, 255, 102, 0.8);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Apply Rozha font family */
+.font-rozha {
+  font-family: var(--font-rozha);
+}
+
+/* Custom range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  outline: none;
+  transition: background 0.3s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #00ff66;
+  box-shadow: 0 0 8px #00ff66;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.3s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #00ff66;
+  box-shadow: 0 0 8px #00ff66;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s, background 0.3s;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.3);
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff;
 }
