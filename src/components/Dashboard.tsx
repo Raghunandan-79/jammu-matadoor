@@ -411,7 +411,7 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="relative min-h-screen w-full flex flex-col justify-between text-white overflow-hidden font-sans select-none">
+    <main className="relative h-screen max-h-screen w-full flex flex-col justify-between text-white overflow-hidden font-sans select-none">
       
       {/* Background Painting - Interactive Parallax Motion Graphics */}
       <div 
@@ -428,10 +428,10 @@ export default function Dashboard() {
       <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#0a0a0d]/50 pointer-events-none" />
 
       {/* ------------------- HEADER ------------------- */}
-      <header className="relative z-10 w-full p-4 md:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <header className="relative z-10 w-full p-3 sm:p-6 flex justify-between items-start sm:items-center gap-3 flex-shrink-0">
         
         {/* Left Side: Clock, simulated passengers, status */}
-        <div className="flex flex-col gap-1.5 glass-panel p-4 rounded-xl border border-white/5 backdrop-blur-md shadow-2xl">
+        <div className="flex flex-col gap-1 sm:gap-1.5 glass-panel p-3 sm:p-4 rounded-xl border border-white/5 backdrop-blur-md shadow-2xl">
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00ff66] opacity-75"></span>
@@ -446,7 +446,7 @@ export default function Dashboard() {
             <span className="text-2xl font-bold tracking-tight text-white/90 tabular-nums">
               {currentTimeStr || "00:00:00 PM"}
             </span>
-            <span className="text-xs text-white/50 tracking-wide uppercase font-medium">
+            <span className="text-[10px] sm:text-xs text-white/50 tracking-wide uppercase font-medium hidden sm:block">
               {currentDateStr || "Wednesday, 12 August - Jammu Local Time"}
             </span>
           </div>
@@ -475,7 +475,8 @@ export default function Dashboard() {
 
         {/* Right Side: Built credit and share */}
         <div className="flex items-center gap-3">
-          <div className="glass-panel text-xs text-white/60 py-2 px-4 rounded-lg border border-white/5 flex items-center gap-1.5 flex-wrap">
+          {/* Desktop/Tablet Credits */}
+          <div className="hidden sm:flex glass-panel text-xs text-white/60 py-2 px-4 rounded-lg border border-white/5 items-center gap-1.5 flex-wrap">
             <span>Built by</span>
             <a 
               href="https://x.com/raghu__79"
@@ -501,44 +502,53 @@ export default function Dashboard() {
               <Share2 className="w-3 h-3 text-[#00ff66]" /> Share Cabin Link
             </button>
           </div>
+
+          {/* Mobile compact share button */}
+          <button 
+            onClick={handleShare}
+            className="flex sm:hidden glass-panel text-xs text-[#00ff66] px-3 py-2 rounded-lg border border-white/5 hover:text-white transition-colors cursor-pointer font-semibold items-center gap-1.5"
+            title="Share Cabin Link"
+          >
+            <Share2 className="w-3.5 h-3.5" /> Share
+          </button>
         </div>
       </header>
 
       {/* ------------------- MIDDLE HERO ------------------- */}
-      <section className="relative z-10 flex-grow flex flex-col justify-center items-center px-4 py-8">
+      <section className="relative z-10 flex-grow flex flex-col justify-center items-center px-4 py-2 sm:py-8">
         
         {/* Large Title overlay - Matches reference saloon aesthetics */}
-        <div className="text-center select-none pointer-events-none mb-4">
-          <div className="inline-block bg-[#00ff66]/10 border border-[#00ff66]/20 px-3.5 py-1.5 rounded-full text-[10px] font-bold tracking-widest text-[#00ff66] uppercase mb-4">
+        <div className="text-center select-none pointer-events-none mb-2 sm:mb-4">
+          <div className="inline-block bg-[#00ff66]/10 border border-[#00ff66]/20 px-3 py-1 rounded-full text-[9px] font-bold tracking-widest text-[#00ff66] uppercase mb-2 sm:mb-4">
             ALL ROUTES
           </div>
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-sans text-transparent bg-clip-text bg-gradient-to-b from-white via-white/80 to-white/30 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)] tracking-wider">
+          <h1 className="text-3xl sm:text-6xl md:text-8xl font-black font-sans text-transparent bg-clip-text bg-gradient-to-b from-white via-white/80 to-white/30 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)] tracking-wider">
             JAMMU MATADOOR
           </h1>
-          <p className="text-xs md:text-sm font-bold tracking-[0.3em] text-[#ff3366] uppercase mt-2 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+          <p className="text-[10px] sm:text-xs md:text-sm font-bold tracking-[0.3em] text-[#ff3366] uppercase mt-1 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
             JAMMU MATADOOR RADIO · PLAYING LIVE
           </p>
         </div>
 
         {/* Floating status message */}
-        <div className="bg-black/55 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/5 text-[11px] font-mono text-white/70 tracking-wider">
+        <div className="bg-black/55 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/5 text-[10px] sm:text-[11px] font-mono text-white/70 tracking-wider mb-2">
           STATUS: <span className="text-[#00ff66] font-bold">{driverState}</span>
         </div>
 
         {/* Playlist description subtitle */}
-        <p className="text-xs text-white/40 mt-4 max-w-md text-center italic tracking-wider">
+        <p className="text-[10px] sm:text-xs text-white/40 mt-2 max-w-md text-center italic tracking-wider hidden sm:block">
           &ldquo;{PLAYLISTS.find(p => p.id === activePlaylistId)?.desc}&rdquo;
         </p>
       </section>
 
       {/* ------------------- BOTTOM STEREO DECK (WITH EMBEDDED VISIBLE IFRAME) ------------------- */}
-      <footer className="relative z-10 w-full p-4 md:p-6 max-w-5xl mx-auto mb-4">
+      <footer className="relative z-10 w-full p-2 sm:p-6 max-w-5xl mx-auto mb-2 sm:mb-4 flex-shrink-0">
         
         {/* Outer glassmorphic border for the Pioneer Stereo Deck */}
-        <div className="glass-panel rounded-2xl md:rounded-3xl border border-white/10 p-4 md:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-lg flex flex-col md:flex-row gap-5 items-center justify-between">
+        <div className="glass-panel rounded-xl sm:rounded-3xl border border-white/10 p-3 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-lg flex flex-col md:flex-row gap-3 sm:gap-5 items-center justify-between">
           
           {/* LEFT SECTION: Visible YouTube Embed Iframe & Song Metadata */}
-          <div className="w-full md:w-1/2 flex flex-col sm:flex-row items-center gap-4 bg-black/60 border border-white/5 rounded-xl p-3 relative overflow-hidden shadow-[inset_0_2px_8px_rgba(0,0,0,0.8)]">
+          <div className="w-full md:w-1/2 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 bg-black/60 border border-white/5 rounded-xl p-2.5 sm:p-3 relative overflow-hidden shadow-[inset_0_2px_8px_rgba(0,0,0,0.8)]">
             
             {/* The literal YouTube Iframe Player, styled as a car stereo dashboard television */}
             <div className="w-full aspect-video sm:aspect-none sm:w-36 sm:h-20 bg-black rounded-lg border border-white/15 overflow-hidden flex-shrink-0 relative shadow-[0_4px_15px_rgba(0,0,0,0.6)]">
@@ -674,7 +684,7 @@ export default function Dashboard() {
               </div>
 
               {/* Volume Slider */}
-              <div className="flex items-center gap-2 bg-white/5 border border-white/5 px-2.5 py-1.5 rounded-lg w-full max-w-[130px] sm:max-w-none">
+              <div className="hidden sm:flex items-center gap-2 bg-white/5 border border-white/5 px-2.5 py-1.5 rounded-lg w-full max-w-[130px] sm:max-w-none">
                 <button 
                   onClick={handleMuteToggle}
                   className="text-white/60 hover:text-white transition-colors cursor-pointer flex-shrink-0"
@@ -717,10 +727,15 @@ export default function Dashboard() {
         </div>
 
         {/* Legal and compliance disclaimer */}
-        <div className="text-center text-[10px] text-white/30 mt-3 max-w-xl mx-auto leading-relaxed">
+        <div className="hidden sm:block text-center text-[10px] text-white/30 mt-3 max-w-xl mx-auto leading-relaxed">
           Audio is streamed live via YouTube API. All rights belong to respective composers and labels. No media is hosted on this server. Playlists are curated by local Jammu crews.
         </div>
       </footer>
+
+      {/* Mobile-only credits display */}
+      <div className="block sm:hidden text-center text-[10px] text-white/30 pb-2 z-10 flex-shrink-0">
+        Built by <a href="https://x.com/raghu__79" target="_blank" rel="noopener noreferrer" className="text-[#00ff66] font-semibold">Raghunandan</a> (@lazyydevv)
+      </div>
 
       {/* ------------------- MODAL: CASSETTE COLLECTION (ALL SONGS) ------------------- */}
       {isAllSongsOpen && (
