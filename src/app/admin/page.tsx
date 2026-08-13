@@ -18,7 +18,7 @@ import { getSongs, addSongServer, deleteSongServer, authenticateAdmin, Song } fr
 import { getYouTubeId } from "../../utils/youtube";
 
 const PLAYLISTS = [
-  { id: "all", name: "All Routes", desc: "The complete Jammu Matadoor cassette collection" }
+  { id: "all", name: "All Routes", desc: "The complete Jammu Matador cassette collection" }
 ];
 
 export default function AdminPage() {
@@ -46,7 +46,7 @@ export default function AdminPage() {
   // Check authentication on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const sessionAuth = sessionStorage.getItem("matadoor_auth");
+      const sessionAuth = sessionStorage.getItem("matador_auth");
       if (sessionAuth === "true") {
         setIsAuthenticated(true);
         fetchSongs();
@@ -68,7 +68,7 @@ export default function AdminPage() {
       const result = await authenticateAdmin(username, password);
       if (result.success) {
         setIsAuthenticated(true);
-        sessionStorage.setItem("matadoor_auth", "true");
+        sessionStorage.setItem("matador_auth", "true");
         fetchSongs();
       } else {
         setAuthError("Incorrect username or password. Access Denied.");
@@ -80,7 +80,7 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    sessionStorage.removeItem("matadoor_auth");
+    sessionStorage.removeItem("matador_auth");
     setUsername("");
     setPassword("");
   };
@@ -173,7 +173,7 @@ export default function AdminPage() {
                 <Lock className="w-5 h-5" />
               </div>
               <h1 className="text-xl font-bold tracking-wide">CABIN CREW ONLY</h1>
-              <p className="text-xs text-white/40 mt-1">Authenticate to access Jammu Matadoor stereo deck</p>
+              <p className="text-xs text-white/40 mt-1">Authenticate to access Jammu Matador stereo deck</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
@@ -246,7 +246,7 @@ export default function AdminPage() {
                 <Music className="w-5 h-5" />
               </div>
               <div>
-                <h1 className="text-md font-bold tracking-wide">JAMMU MATADOOR STEREO DECK</h1>
+                <h1 className="text-md font-bold tracking-wide">JAMMU MATADOR STEREO DECK</h1>
                 <p className="text-[10px] text-white/40 tracking-wider font-mono">ADMIN CONTROL PANEL</p>
               </div>
             </div>

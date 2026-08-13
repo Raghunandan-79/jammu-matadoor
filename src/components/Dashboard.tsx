@@ -22,7 +22,7 @@ import { getYouTubeId } from "../utils/youtube";
 import { getSongs, Song } from "../app/admin/actions";
 
 const PLAYLISTS = [
-  { id: "all", name: "All Routes", desc: "The complete Jammu Matadoor cassette collection" }
+  { id: "all", name: "All Routes", desc: "The complete Jammu Matador cassette collection" }
 ];
 
 const ROUTES = [
@@ -34,7 +34,7 @@ const ROUTES = [
 ];
 
 const DRIVER_STATES = [
-  "Racing another Matadoor! (BASS BOOSTED)",
+  "Racing another Matador! (BASS BOOSTED)",
   "Collecting passengers at Jewel Chowk",
   "Overloaded (15 standing on footboard)",
   "Cruising over Tawi Bridge",
@@ -256,7 +256,7 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Simulate Jammu Matadoor ecosystem (Passengers and Driver status)
+  // Simulate Jammu Matador ecosystem (Passengers and Driver status)
   useEffect(() => {
     const interval = setInterval(() => {
       setPassengerCount(prev => {
@@ -523,10 +523,10 @@ export default function Dashboard() {
             ALL ROUTES
           </div>
           <h1 className="text-3xl sm:text-6xl md:text-8xl font-black font-sans text-transparent bg-clip-text bg-gradient-to-b from-white via-white/80 to-white/30 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)] tracking-wider">
-            JAMMU MATADOOR
+            JAMMU MATADOR
           </h1>
           <p className="text-[10px] sm:text-xs md:text-sm font-bold tracking-[0.3em] text-[#ff3366] uppercase mt-1 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
-            JAMMU MATADOOR RADIO · PLAYING LIVE
+            JAMMU MATADOR RADIO · PLAYING LIVE
           </p>
         </div>
 
